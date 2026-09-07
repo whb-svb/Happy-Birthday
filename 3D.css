@@ -1,109 +1,175 @@
-.wrap{
+* { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #050510;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  /* 蛋糕层（底） */
+  #cakeCanvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+  /* 背景层（爱心+魔方出现时覆盖蛋糕） */
+  #sceneBg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    display: none;
+    background: radial-gradient(ellipse at 50% 60%, #0a0a1e 0%, #050510 60%, #020208 100%);
+  }
+  #sceneBg.show { display: block; }
+  /* 爱心层（上左） */
+  #heartCanvas {
+    position: fixed; top: 0; left: 0;
+    width: 50%; height: 100%;
+    z-index: 3;
+    display: none;
+    pointer-events: none;
+  }
+  /* 魔方层（上右） */
+  #cubeWrap {
+    position: fixed;
+    top: 0; 
+    right: 0;
+    width: 50%; height: 100%;
+    z-index: 3;
+    display: none;
+    perspective: 800px;
+    align-items: center;
+    justify-content: center;
+  }
+  #cubeWrap.show { display: flex; }
+  .cube-scene {
     width: 200px;
     height: 200px;
-    margin-left:600px;
-    margin-top: 300px;
     position: relative;
-}
-
-.cube{
+    transform-style: preserve-3d;
+  }
+  .cube {
     width: 200px;
     height: 200px;
+    position: relative;
     transform-style: preserve-3d;
-    animation: xuanzhuan linear 10s infinite;
-    transform: rotateX(-30deg) rotateY(-80deg);
-}
-.cube div {
+    animation: cubeSpin linear 12s infinite;
+    transform: rotateX(-20deg) rotateY(-45deg);
+  }
+  .cube div {
     position: absolute;
     width: 200px;
     height: 200px;
-    opacity: 0.8;
-    transition: all .4s;
-}
-.cube img{
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    transition: all 0.4s;
+  }
+  .cube img{
     width: 200px;
     height: 200px;
-}
-.out_front{
-    transform: translateZ(100px);
-}
-.out_blck{
-    transform: translateZ(-100px);
-}
-.out_top{
-    transform: rotateX(90deg) translateZ(100px);
-}
-.out_buttom{
-    transform: rotateX(90deg) translateZ(-100px);
-}
-.out_left{
-    transform: rotateY(90deg) translateZ(100px);
-}
-.out_right{
-    transform: rotateY(90deg) translateZ(-100px);
-}
-@keyframes xuanzhuan {
-    from {
-        transform: rotateX(0deg) rotateY(0deg);
-    }
-    to {
-        transform: rotateX(360deg) rotateY(360deg);
-    }
-}
-.cubu{
-    width: 100px;
-    height: 100px;
-    transform-style: preserve-3d;
-    animation: xuanzhuan linear 10s infinite;
-    transform: rotateX(-30deg) rotateY(-80deg);
-}
-.cubu div {
+  }
+  .cube .f-front  { transform: translateZ(100px);  }
+  .cube .f-back   { transform: translateZ(-100px); }
+  .cube .f-top    { transform: rotateX(90deg) translateZ(100px);   }
+  .cube .f-bottom { transform: rotateX(90deg) translateZ(-100px);  }
+  .cube .f-left   { transform: rotateY(90deg) translateZ(100px);   }
+  .cube .f-right  { transform: rotateY(90deg) translateZ(-100px);  }
+  /* 内魔方 */
+  .inner-cube {
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
+    top: 50%; 
+    left: 50%;
+    margin: -45px 0 0 -45px;
+    transform-style: preserve-3d;
+    animation: cubeSpin linear 8s infinite reverse;
+  }
+  .inner-cube div {
+    position: absolute;
+    width: 90px;
+    height: 90px;
     opacity: 0.8;
-    transition: all .4s;
-}
-.cubu img{
-    width: 100px;
-    height: 100px;
-}
-.in_front{
-    transform: translateZ(50px);
-}
-.in_blck{
-    transform: translateZ(-50px);
-}
-.in_top{
-    transform: rotateX(90deg) translateZ(50px);
-}
-.in_buttom{
-    transform: rotateX(90deg) translateZ(-50px);
-}
-.in_left{
-    transform: rotateY(90deg) translateZ(50px);
-}
-.in_right{
-    transform: rotateY(90deg) translateZ(-50px);
-}
-.cube:hover .out_front{
-    transform: translateZ(300px);
-}
-.cube:hover .out_blck{
-    transform: translateZ(-300px);
-}
-.cube:hover .out_left {
-    transform: rotateY(90deg) translateZ(300px);
-}
-
-.cube:hover .out_right {
-    transform: rotateY(90deg) translateZ(-300px);
-}
-
-.cube:hover .out_top {
-    transform: rotateX(90deg) translateZ(300px);
-}
-
-.cube:hover .out_buttom {
-    transform: rotateX(90deg) translateZ(-300px);
-}
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .inner-cube img{
+    width: 90px;
+    height: 90px;
+  }
+  .inner-cube .i-front  { transform: translateZ(45px);   }
+  .inner-cube .i-back   { transform: translateZ(-45px);  }
+  .inner-cube .i-top    { transform: rotateX(90deg) translateZ(45px);   }
+  .inner-cube .i-bottom { transform: rotateX(90deg) translateZ(-45px);  }
+  .inner-cube .i-left   { transform: rotateY(90deg) translateZ(45px);   }
+  .inner-cube .i-right  { transform: rotateY(90deg) translateZ(-45px);  }
+  @keyframes cubeSpin {
+    from { transform: rotateX(0deg) rotateY(0deg); }
+    to   { transform: rotateX(360deg) rotateY(360deg); }
+  }
+  .cube:hover .f-front  { transform: translateZ(200px); }
+  .cube:hover .f-back   { transform: translateZ(-200px); }
+  .cube:hover .f-left   { transform: rotateY(90deg) translateZ(200px); }
+  .cube:hover .f-right  { transform: rotateY(90deg) translateZ(-200px); }
+  .cube:hover .f-top    { transform: rotateX(90deg) translateZ(200px); }
+  .cube:hover .f-bottom { transform: rotateX(90deg) translateZ(-200px); }
+  .cube-label {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-align: center;
+  }
+  .ui {
+    position: fixed; top: 28px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center; z-index: 10; pointer-events: none;
+  }
+  .ui h1 {
+    color: #fff; font-size: 1.9rem; letter-spacing: 5px;
+    text-shadow: 0 0 20px rgba(255,107,157,0.9), 0 0 50px rgba(255,107,157,0.4);
+    animation: glow 2.5s ease-in-out infinite alternate;
+  }
+  .ui p {
+    color: rgba(255,255,255,0.5); margin-top: 6px;
+    font-size: 0.8rem; letter-spacing: 2px;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 20px rgba(255,107,157,0.9), 0 0 50px rgba(255,107,157,0.4); }
+    to   { text-shadow: 0 0 30px rgba(255,200,100,0.9), 0 0 70px rgba(255,150,50,0.5); }
+  }
+  .controls {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 10px; z-index: 10;
+  }
+  button {
+    padding: 9px 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 30px;
+    background: rgba(255,255,255,0.06);
+    color: #fff; font-size: 0.82rem; cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s; letter-spacing: 1px;
+  }
+  button:hover {
+    background: rgba(255,107,157,0.25);
+    border-color: rgba(255,107,157,0.5);
+    box-shadow: 0 0 25px rgba(255,107,157,0.3);
+  }
+  .hint {
+    position: fixed; bottom: 72px; left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.3); font-size: 0.72rem;
+    z-index: 10; pointer-events: none; letter-spacing: 1px;
+  }
+  /* 爱心出现后的标题 */
+  .heart-title { display: none; }
+  body.show-heart .cake-title { display: none; }
+  body.show-heart .heart-title { display: block; }
