@@ -1,29 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>宝贝生日快乐</title>
-    <link rel="stylesheet" href="3D.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生日蛋糕 + 粒子爱心</title>
+<link rel="stylesheet" href="../css/最终.css">
 </head>
 <body>
-    <div class="wrap">
-        <div class="cube">
-            <div class="out_front"><img src="二爷.jpg"></div>
-            <div class="out_blck"><img src="五爷.jpg"></div>
-            <div class="out_top"><img src="佛爷.jpg"></div>
-            <div class="out_buttom"><img src="八爷.jpg"></div>
-            <div class="out_left"><img src="张日山.jpg"></div>
-            <div class="out_right"><img src="陈皮.jpg"></div>
-            <ul class="cubu">
-                <div class="in_front"><img src="二爷.jpg"></div>
-                <div class="in_blck"><img src="五爷.jpg"></div>
-                <div class="in_top"><img src="佛爷.jpg"></div>
-                <div class="in_buttom"><img src="八爷.jpg"></div>
-                <div class="in_left"><img src="张日山.jpg"></div>
-                <div class="in_right"><img src="陈皮.jpg"></div>
-            </ul>    
+  <object height="50px" width="100px" data="../img/白慕寒 - .海屿你 (破碎版).mp3"></object>
+    <div class="ui">
+        <div class="cake-title">
+          <h1>🎂 HAPPY BIRTHDAY 🎂</h1>
+          <p>拖拽旋转 · 点击"吹/点蜡烛"有惊喜</p>
         </div>
-    </div>
+        <div class="heart-title">
+          <h1 style="font-size:1.6rem;letter-spacing:8px;text-shadow:0 0 20px rgba(200,220,255,0.6),0 0 40px rgba(150,180,255,0.3);">L O V E</h1>
+          <p style="color:rgba(200,210,230,0.5);">愿星光为你汇聚成心</p>
+        </div>
+      </div>
+      
+      <canvas id="cakeCanvas"></canvas>
+      <div id="sceneBg"></div>
+      <canvas id="heartCanvas"></canvas>
+      <div id="cubeWrap">
+        <div class="cube-scene">
+          <div class="cube">
+            <div class="f-front"><img src="../img/二爷.jpg" alt=""></div>
+            <div class="f-back"><img src="../img/五爷.jpg" alt=""></div>
+            <div class="f-top"><img src="../img/佛爷.jpg" alt=""></div>
+            <div class="f-bottom"><img src="../img/八爷.jpg" alt=""></div>
+            <div class="f-left"><img src="../img/陈皮.jpg" alt=""></div>
+            <div class="f-right"><img src="../img/张日山.jpg" alt=""></div>
+            <ul class="inner-cube">
+              <div class="i-front"><img src="../img/二爷.jpg" alt=""></div>
+              <div class="i-back"><img src="../img/五爷.jpg" alt=""></div>
+              <div class="i-top"><img src="../img/佛爷.jpg" alt=""></div>
+              <div class="i-bottom"><img src="../img/八爷.jpg" alt=""></div>
+              <div class="i-left"><img src="../img/陈皮.jpg" alt=""></div>
+              <div class="i-right"><img src="../img/张日山.jpg" alt=""></div>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hint">左键拖拽旋转视角 · 滚轮缩放 · 右键平移</div>
+      
+      <div class="controls">
+        <button id="candleBtn" onclick="cakeToggleCandles()">🕯️ 吹/点蜡烛</button>
+      </div>
 </body>
+<script src="../js/最终.js"></script>
 </html>
