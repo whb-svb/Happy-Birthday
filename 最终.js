@@ -1,5 +1,4 @@
 //  粒子生日蛋糕
-
 (function() {
     const canvas = document.getElementById('cakeCanvas');
     const ctx = canvas.getContext('2d');
@@ -19,6 +18,10 @@
     let camTargetX = 0, camTargetY = 20, camTargetZ = 0;
     let autoRotate = true;
     const FOV = 500;
+
+    // 吹蜡烛后：只隐藏蛋糕粒子，保留自动旋转的星空背景
+    let hideCake = false;
+    window.cakeSetHidden = function(v) { hideCake = v; };
 
     // 鼠标控制
     let isDragging = false, isPanning = false;
@@ -207,7 +210,7 @@
           }
         });
       } else {
-        // 吹灭蜡烛 → 显示爱心层 + 隐藏吹蜡烛按钮 + 隐藏环形相册
+        // 吹灭蜡烛 → 显示爱心层 + 隐藏吹蜡烛按钮 + 隐藏环形相册 + 隐藏蛋糕粒子
         showHeartLayer();
         document.getElementById('candleBtn').style.display = 'none';
       }
@@ -237,31 +240,34 @@
         }
       });
 
-      particles.forEach(p => p.update(time));
+      // 吹蜡烛后不再绘制蛋糕粒子（星空保留、继续自动旋转）
+      if (!hideCake) {
+        particles.forEach(p => p.update(time));
 
-      const sorted = particles.map(p => {
-        const pr = project(p.x, p.y, p.z);
-        return { p, pr };
-      }).filter(item => item.pr !== null).sort((a, b) => b.pr.z - a.pr.z);
+        const sorted = particles.map(p => {
+          const pr = project(p.x, p.y, p.z);
+          return { p, pr };
+        }).filter(item => item.pr !== null).sort((a, b) => b.pr.z - a.pr.z);
 
-      sorted.forEach(item => {
-        const { p, pr } = item;
-        const size = Math.max(0.5, 2.2 * pr.scale * 0.15);
-        const alpha = p.type === 2 ? (candlesLit ? 0.9 : 0.3) : 0.85;
-        if (p.type === 2 && candlesLit) {
-          const grad = ctx.createRadialGradient(pr.x, pr.y, 0, pr.x, pr.y, size*4);
-          grad.addColorStop(0, `rgba(${p.r*255},${p.g*255},${p.b*255},0.5)`);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
+        sorted.forEach(item => {
+          const { p, pr } = item;
+          const size = Math.max(0.5, 2.2 * pr.scale * 0.15);
+          const alpha = p.type === 2 ? (candlesLit ? 0.9 : 0.3) : 0.85;
+          if (p.type === 2 && candlesLit) {
+            const grad = ctx.createRadialGradient(pr.x, pr.y, 0, pr.x, pr.y, size*4);
+            grad.addColorStop(0, `rgba(${p.r*255},${p.g*255},${p.b*255},0.5)`);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(pr.x, pr.y, size*4, 0, Math.PI*2);
+            ctx.fill();
+          }
+          ctx.fillStyle = `rgba(${p.r*255},${p.g*255},${p.b*255},${alpha})`;
           ctx.beginPath();
-          ctx.arc(pr.x, pr.y, size*4, 0, Math.PI*2);
+          ctx.arc(pr.x, pr.y, size, 0, Math.PI*2);
           ctx.fill();
-        }
-        ctx.fillStyle = `rgba(${p.r*255},${p.g*255},${p.b*255},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(pr.x, pr.y, size, 0, Math.PI*2);
-        ctx.fill();
-      });
+        });
+      }
     }
 
     buildCake();
@@ -269,9 +275,7 @@
   })();
 
 
-
   //  粒子爱心
-
   (function() {
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
@@ -512,13 +516,8 @@
       if (bt < 0.1) beatScale = 1 + Math.sin(bt/0.1*Math.PI)*0.08;
       else if (bt > 0.15 && bt < 0.25) beatScale = 1 + Math.sin((bt-0.15)/0.1*Math.PI)*0.05;
 
-      // 透明背景（能看到下层蛋糕）
-      if (trailEnabled) {
-        ctx.fillStyle = 'rgba(5, 5, 16, 0.8)';
-      } else {
-        ctx.clearRect(0, 0, W, H);
-      }
-      ctx.fillRect(0, 0, W, H);
+      // 背景完全透明  下层自动旋转的星空透出，爱心层与魔方层共用
+      ctx.clearRect(0, 0, W, H);
 
       // 底部发光
       const [gr,gg,gb] = colors.glow;
@@ -544,10 +543,11 @@
     }
 
     window.showHeartLayer = function() {
-      // 隐藏环形相册（与蛋糕层一起消失）
+      // 隐藏环形相册（与蛋糕一起消失）
       document.getElementById('albumWrap').classList.add('hide');
-      // 显示统一背景（覆盖蛋糕）
-      document.getElementById('sceneBg').classList.add('show');
+      // 保留自动旋转的星空背景给爱心层与魔方层共用
+      // 隐藏蛋糕粒子（星空继续旋转）
+      if (window.cakeSetHidden) window.cakeSetHidden(true);
       canvas.style.display = 'block';
       document.getElementById('cubeWrap').classList.add('show');
       document.body.classList.add('show-heart');
