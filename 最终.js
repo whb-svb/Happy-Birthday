@@ -1,8 +1,9 @@
-//  【第一层】3D 粒子生日蛋糕
+//  粒子生日蛋糕
+
 (function() {
     const canvas = document.getElementById('cakeCanvas');
     const ctx = canvas.getContext('2d');
-  
+
     let W, H;
     function resize() {
       W = canvas.width = window.innerWidth;
@@ -10,15 +11,15 @@
     }
     resize();
     window.addEventListener('resize', resize);
-  
+
     //自动旋转
     let camDist = 320;
     let camYaw = 0;
     let camPitch = 0.5;
     let camTargetX = 0, camTargetY = 20, camTargetZ = 0;
-    let autoRotate = true;  
+    let autoRotate = true;
     const FOV = 500;
-  
+
     // 鼠标控制
     let isDragging = false, isPanning = false;
     let lastMX = 0, lastMY = 0;
@@ -49,7 +50,7 @@
       camDist = Math.max(100, Math.min(700, camDist));
     }, { passive: false });
     canvas.addEventListener('contextmenu', e => e.preventDefault());
-  
+
     function rotateY(x, y, z, a) {
       const c = Math.cos(a), s = Math.sin(a);
       return [x*c + z*s, y, -x*s + z*c];
@@ -67,7 +68,7 @@
       const sc = FOV / zc;
       return { x: W/2 + p[0]*sc, y: H/2 - p[1]*sc, z: zc, scale: sc };
     }
-  
+
     class CakeParticle {
       constructor(tx, ty, tz, r, g, b, type) {
         this.tx = tx; this.ty = ty; this.tz = tz;
@@ -103,15 +104,15 @@
         this.vz = (Math.random()-0.5)*50;
       }
     }
-  
+
     let particles = [];
     let candlesLit = true;
     let time = 0;
-  
+
     function hexToRgb(hex) {
       return [parseInt(hex.slice(1,3),16)/255, parseInt(hex.slice(3,5),16)/255, parseInt(hex.slice(5,7),16)/255];
     }
-  
+
     function buildCake() {
       particles = [];
       const layers = [
@@ -188,12 +189,11 @@
         }
       }
     }
-  
+
     const stars = [];
     for (let i = 0; i < 600; i++) {
       stars.push({ x:(Math.random()-0.5)*2000, y:(Math.random()-0.5)*2000, z:(Math.random()-0.5)*2000, size:Math.random()*1.5+0.3, twinkle:Math.random()*Math.PI*2 });
     }
-  
 
     window.cakeExplode = function() { particles.forEach(p => p.explode()); };
     window.cakeToggleCandles = function() {
@@ -207,7 +207,7 @@
           }
         });
       } else {
-        // 吹灭蜡烛 → 显示爱心层 + 隐藏吹蜡烛按钮
+        // 吹灭蜡烛 → 显示爱心层 + 隐藏吹蜡烛按钮 + 隐藏环形相册
         showHeartLayer();
         document.getElementById('candleBtn').style.display = 'none';
       }
@@ -217,15 +217,15 @@
       camDist = 320; camYaw = 0; camPitch = 0.5;
       camTargetX = 0; camTargetY = 20; camTargetZ = 0;
     };
-  
+
     function animate() {
       requestAnimationFrame(animate);
       time += 0.016;
       if (autoRotate) camYaw += 0.005;
-  
+
       ctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
       ctx.fillRect(0, 0, W, H);
-  
+
       stars.forEach(s => {
         const p = project(s.x, s.y, s.z);
         if (p && p.z > 0) {
@@ -236,14 +236,14 @@
           ctx.fill();
         }
       });
-  
+
       particles.forEach(p => p.update(time));
-  
+
       const sorted = particles.map(p => {
         const pr = project(p.x, p.y, p.z);
         return { p, pr };
       }).filter(item => item.pr !== null).sort((a, b) => b.pr.z - a.pr.z);
-  
+
       sorted.forEach(item => {
         const { p, pr } = item;
         const size = Math.max(0.5, 2.2 * pr.scale * 0.15);
@@ -263,17 +263,19 @@
         ctx.fill();
       });
     }
-  
+
     buildCake();
     animate();
   })();
-  
-  
-  //  【第二层】粒子爱心
+
+
+
+  //  粒子爱心
+
   (function() {
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
-  
+
     let W, H, CX, CY;
     function resize() {
       W = canvas.width = canvas.offsetWidth;
@@ -283,7 +285,7 @@
     }
     resize();
     window.addEventListener('resize', resize);
-  
+
     // 配色
     const colorSchemes = [
       { main: [255,255,255], glow: [180,200,255], accent: [120,160,255] },
@@ -295,7 +297,7 @@
     let colorIdx = 0;
     let colors = colorSchemes[0];
     let autoColorTimer = null;
-  
+
     function heartPoint(t, scale) {
       const x = 16 * Math.pow(Math.sin(t), 3);
       const y = -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t));
@@ -305,7 +307,7 @@
       const nx = x / (17*scale), ny = -y / (17*scale);
       return Math.pow(nx*nx + ny*ny - 1, 3) - nx*nx * ny*ny*ny <= 0;
     }
-  
+
     class HeartParticle {
       constructor() { this.reset(true); }
       reset(initial = false) {
@@ -402,7 +404,7 @@
         ctx.fill();
       }
     }
-  
+
     class BeamParticle {
       constructor() { this.reset(); }
       reset() {
@@ -441,7 +443,7 @@
         ctx.fill();
       }
     }
-  
+
     class Bokeh {
       constructor() { this.reset(true); }
       reset(initial = false) {
@@ -474,17 +476,15 @@
         ctx.fill();
       }
     }
-  
- 
-  
+
     const PARTICLE_COUNT = 600;
     const BEAM_COUNT = 80;
     const BOKEH_COUNT = 50;
-  
+
     let particles = [];
     let beams = [];
     let bokehs = [];
-  
+
     function initParticles() {
       particles = []; beams = []; bokehs = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new HeartParticle());
@@ -492,49 +492,49 @@
       for (let i = 0; i < BOKEH_COUNT; i++) bokehs.push(new Bokeh());
     }
     initParticles();
-  
+
     let time = 0;
     let trailEnabled = true;
     let running = false;
-  
+
     function changeColor() {
       colorIdx = (colorIdx + 1) % colorSchemes.length;
       colors = colorSchemes[colorIdx];
     }
-  
+
     function animate() {
       if (!running) return;
       requestAnimationFrame(animate);
       time += 0.016;
-  
+
       const bt = (time * 1.0) % 1;
       let beatScale = 1;
       if (bt < 0.1) beatScale = 1 + Math.sin(bt/0.1*Math.PI)*0.08;
       else if (bt > 0.15 && bt < 0.25) beatScale = 1 + Math.sin((bt-0.15)/0.1*Math.PI)*0.05;
-  
+
       // 透明背景（能看到下层蛋糕）
       if (trailEnabled) {
-        ctx.fillStyle = 'rgba(5, 5, 16, 0.08)';
+        ctx.fillStyle = 'rgba(5, 5, 16, 0.8)';
       } else {
         ctx.clearRect(0, 0, W, H);
       }
       ctx.fillRect(0, 0, W, H);
-  
+
       // 底部发光
       const [gr,gg,gb] = colors.glow;
       const sourceGlow = ctx.createRadialGradient(CX, H*0.85, 0, CX, H*0.85, 120);
-      sourceGlow.addColorStop(0, 'rgba(255,255,255,0.12)');
+      sourceGlow.addColorStop(0, 'rgba(255,255,255,0.2)');
       sourceGlow.addColorStop(0.3, `rgba(${gr},${gg},${gb},0.06)`);
       sourceGlow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = sourceGlow;
       ctx.fillRect(CX-150, H*0.85-150, 300, 300);
-  
+
       bokehs.forEach(b => { b.update(time); b.draw(ctx, time); });
-  
+
       ctx.globalCompositeOperation = 'lighter';
       beams.forEach(b => { b.update(); b.draw(ctx); });
       particles.forEach(p => { p.update(beatScale); p.draw(ctx); });
-  
+
       const heartGlow = ctx.createRadialGradient(CX, CY, 0, CX, CY, 80);
       heartGlow.addColorStop(0, `rgba(255,255,255,${0.04 + Math.sin(time*2)*0.02})`);
       heartGlow.addColorStop(1, 'rgba(0,0,0,0)');
@@ -542,9 +542,10 @@
       ctx.fillRect(CX-100, CY-100, 200, 200);
       ctx.globalCompositeOperation = 'source-over';
     }
-  
 
     window.showHeartLayer = function() {
+      // 隐藏环形相册（与蛋糕层一起消失）
+      document.getElementById('albumWrap').classList.add('hide');
       // 显示统一背景（覆盖蛋糕）
       document.getElementById('sceneBg').classList.add('show');
       canvas.style.display = 'block';
@@ -561,7 +562,7 @@
         running = true;
         animate();
       }
-      // 自动一直换色（每2.5秒换一次）
+      // 自动一直换色
       if (autoColorTimer) clearInterval(autoColorTimer);
       autoColorTimer = setInterval(changeColor, 2500);
     };
