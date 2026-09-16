@@ -3,53 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>生日蛋糕 + 粒子爱心</title>
-<link rel="stylesheet" href="3D.css">
+<title>生日快乐宝贝</title>
+<link rel="stylesheet" href="./3D.css">
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="../img/白慕寒 - .海屿你 (破碎版).mp3">
-  </audio>
-    <div class="ui">
-        <div class="cake-title">
-          <h1>🎂 HAPPY BIRTHDAY 🎂</h1>
-          <p>拖拽旋转 · 点击"吹/点蜡烛"有惊喜</p>
-        </div>
-        <div class="heart-title">
-          <h1 style="font-size:1.6rem;letter-spacing:8px;text-shadow:0 0 20px rgba(200,220,255,0.6),0 0 40px rgba(150,180,255,0.3);">L O V E</h1>
-          <p style="color:rgba(200,210,230,0.5);">愿星光为你汇聚成心</p>
+  <audio id="bg-audio" src="./白慕寒 - .海屿你 (破碎版).mp3" preload="auto"></audio>
+
+  <div class="ui">
+    <div class="cake-title">
+      <h1>🎂 HAPPY BIRTHDAY 🎂</h1>
+      <p>拖拽旋转 · 点击"吹/点蜡烛"有惊喜</p >
+    </div>
+    <div class="heart-title">
+      <h1 style="font-size:1.6rem;letter-spacing:8px;text-shadow:0 0 20px rgba(200,220,255,0.6),0 0 40px rgba(150,180,255,0.3);">L O V E</h1>
+      <p style="color:rgba(200,210,230,0.5);">愿星光为你汇聚成心</p >
+    </div>
+  </div>
+
+  <!-- 蛋糕层（底层） -->
+  <canvas id="cakeCanvas"></canvas>
+
+  <!-- 环形相册层 -->
+  <div id="albumWrap">
+    <div class="wr">
+      <div class="cu">
+        <div id="a" class="a1">< img src="https://i1.hdslb.com/bfs/archive/021fb89d6d1c62be6e8f3f5d27d6f6e61c645666.jpg" alt=""></div>
+        <div id="a" class="a2">< img src="https://p5.ssl.qhimgs1.com/t0470209e0f1b8eb98f.jpg" alt=""></div>
+        <div id="a" class="a3">< img src="https://p0.ssl.qhimgs1.com/sdr/400__/t01c2fa79790a2f6afe.jpg" alt=""></div>
+        <div id="a" class="a4">< img src="https://p2.ssl.qhimgs1.com/sdr/400__/t046b0d491d5470a4d2.jpg" alt=""></div>
+        <div id="a" class="a5">< img src="https://p0.ssl.qhimgs1.com/sdr/400__/t01fadce9a12dba903e.jpg" alt=""></div>
+        <div id="a" class="a6">< img src="https://p5.ssl.qhimgs1.com/sdr/400__/t0451ea753daf74eef5.jpg" alt=""></div>
+        <div id="a" class="a7">< img src="https://img-blog.csdn.net/20170716094422331" alt=""></div>
+        <div id="a" class="a8">< img src="https://img-blog.csdn.net/20170716094444434" alt=""></div>
+        <div id="a" class="a9">< img src="https://img-blog.csdn.net/20170716094504432" alt=""></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 统一背景层 -->
+  <div id="sceneBg"></div>
+
+  <!-- 爱心层 -->
+  <canvas id="heartCanvas"></canvas>
+
+  <!-- 魔方层 -->
+  <div id="cubeWrap">
+    <div class="cube-scene">
+      <div class="cube">
+        <div class="f-front">< img src="https://img-blog.csdn.net/20170716094246620"></div>
+        <div class="f-back">< img src="https://img-blog.csdn.net/20170716094334594"></div>
+        <div class="f-top">< img src="https://img-blog.csdn.net/20170716094400013"></div>
+        <div class="f-bottom">< img src="https://img-blog.csdn.net/20170716094422331"></div>
+        <div class="f-left">< img src="https://img-blog.csdn.net/20170716094444434"></div>
+        <div class="f-right">< img src="https://img-blog.csdn.net/20170716094504432"></div>
+        <div class="inner-cube">
+          <div class="i-front">< img src="./二爷.jpg"></div>
+          <div class="i-back">< img src="https://img-blog.csdn.net/20170716120759718"></div>
+          <div class="i-top">< img src="https://img-blog.csdn.net/20170716120759718"></div>
+          <div class="i-bottom">< img src="https://img-blog.csdn.net/20170716120759718"></div>
+          <div class="i-left">< img src="https://img-blog.csdn.net/20170716120759718"></div>
+          <div class="i-right">< img src="https://img-blog.csdn.net/20170716120759718"></div>
         </div>
       </div>
-      
-      <canvas id="cakeCanvas"></canvas>
-      <div id="sceneBg"></div>
-      <canvas id="heartCanvas"></canvas>
-      <div id="cubeWrap">
-        <div class="cube-scene">
-          <div class="cube">
-            <div class="f-front"><img src="二爷.jpg" alt=""></div>
-            <div class="f-back"><img src="五爷.jpg" alt=""></div>
-            <div class="f-top"><img src="佛爷.jpg" alt=""></div>
-            <div class="f-bottom"><img src="八爷.jpg" alt=""></div>
-            <div class="f-left"><img src=".jpg" alt=""></div>
-            <div class="f-right"><img src="张日山.jpg" alt=""></div>
-            <ul class="inner-cube">
-              <div class="i-front"><img src="二爷.jpg" alt=""></div>
-              <div class="i-back"><img src="五爷.jpg" alt=""></div>
-              <div class="i-top"><img src="佛爷.jpg" alt=""></div>
-              <div class="i-bottom"><img src="八爷.jpg" alt=""></div>
-              <div class="i-left"><img src="陈皮.jpg" alt=""></div>
-              <div class="i-right"><img src="张日山.jpg" alt=""></div>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <div class="hint">左键拖拽旋转视角 · 滚轮缩放 · 右键平移</div>
-      
-      <div class="controls">
-        <button id="candleBtn" onclick="cakeToggleCandles()">🕯️ 吹/点蜡烛</button>
-      </div>
+    </div>
+  </div>
+
+  <div class="hint">左键拖拽旋转视角 · 滚轮缩放 · 右键平移</div>
+
+  <div class="controls">
+    <button id="candleBtn" onclick="cakeToggleCandles()">🕯️ 吹/点蜡烛</button>
+  </div>
+ <script>
+  const audio = document.getElementById('bg-audio');
+  audio.loop = true;
+
+  // 尝试自动播放（静音）
+  audio.muted = true;
+    audio.play().catch(() => {
+      console.log('自动播放被阻止，请用户交互');
+    });
+    // 播放按钮
+    document.getElementById('candleBtn').addEventListener('click', () => {
+      audio.muted = false;
+      audio.play();
+    });
+ </script> 
+<script src="./最终.js"></script>
 </body>
-<script src="最终.js"></script>
 </html>
